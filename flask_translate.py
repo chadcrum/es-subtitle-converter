@@ -34,23 +34,21 @@ def translate_file(input_file):
     translator = Translator()
     output_file = input_file.replace('.en.srt', '.ca.srt')
     print('Input file: ' + input_file + ' and Output file: ' + output_file)
-    output_f = open(output_file, 'w')
-    with open(input_file) as input_f:
-        for line in input_f:
-            try:
-                #if re.match('^[A-Za-z]', line):
-                if not re.match('(^[0-9]+$|^[0-9]{2}:[0-9]{2}:[0-9]{2},[0-9]+|^$)', line):
+    try:
+        output_f = open(output_file, 'w')
+        with open(input_file) as input_f:
+            content = input_f.read()
+            for chunk in content.split('\n\n'):
+                lines = chunk.split('\n')
+                output_f.write(lines[0] + "\n")
+                output_f.write(lines[1] + "\n")
+                for line in lines[2:]:
                     trans_output = translator.translate(line, src='en', dest='es')
-                    output_f.write(trans_output.text)
-                    print(trans_output.text)
-                elif re.match('^[0-9]+$', line):
-                    output_f.write('\n' + line) 
-                    print(trans_output.text)
-                else:
-                    output_f.write(line)
-                    print(trans_output.text)
-            except Excpetion:
-                print('we got problems buddy')
+                    print(trans_output)
+                    output_f.write(trans_output.text + "\n")
+                output_f.write("\n")
+    except Exception:
+        print('problems')
     output_f.close()
     return output_file
 
