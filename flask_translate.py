@@ -34,21 +34,22 @@ def translate_file(input_file):
     translator = Translator()
     output_file = input_file.replace('.en.srt', '.ca.srt')
     print('Input file: ' + input_file + ' and Output file: ' + output_file)
-    try:
-        output_f = open(output_file, 'w')
-        with open(input_file) as input_f:
-            content = input_f.read()
-            for chunk in content.split('\n\n'):
-                lines = chunk.split('\n')
-                output_f.write(lines[0] + "\n")
-                output_f.write(lines[1] + "\n")
+    output_f = open(output_file, 'w')
+    with open(input_file) as input_f:
+        content = input_f.read()
+        for chunk in content.split('\n\n'):
+            lines = chunk.split('\n')
+            output_f.write(lines[0] + "\n")
+            output_f.write(lines[1] + "\n")
+            try:
                 for line in lines[2:]:
                     trans_output = translator.translate(line, src='en', dest='es')
                     print(trans_output)
                     output_f.write(trans_output.text + "\n")
-                output_f.write("\n")
-    except Exception:
-        print('problems')
+            except Exception:
+                print('problems')
+                output_f.write('Problemas con traducir iuhay puta \n')
+            output_f.write("\n")
     output_f.close()
     return output_file
 
